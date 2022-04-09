@@ -1,0 +1,83 @@
+#include <iostream>
+#include <list>
+using namespace std;
+
+class Component
+{
+public:
+	virtual void print() {}
+};
+
+class Decorator : public Component
+{
+public:
+	Decorator(Component*c){
+		_component = c;
+	}
+	virtual void print()override {
+		_component->print();
+	}
+private:
+	Component* _component;
+};
+
+
+class A : public Decorator
+{
+public:
+	A(Component* c = nullptr) :Decorator(c) {}
+
+	virtual void print()override {
+		cout << "A\n";
+	}
+};
+
+class B : public Decorator
+{
+public:
+	B(Component* c = nullptr) :Decorator(c) {}
+	virtual void print()override {
+		cout << "B\n";
+	}
+};
+
+
+class Actor
+{
+public:
+	void addComponent(Component* c)
+	{
+		all.push_back(c);
+	}
+
+	void start()
+	{
+		for (auto& p : all) {
+			p->print();
+		}
+	}
+
+private:
+	list<Component*> all;
+};
+
+class MyActor : public Actor
+{
+public:
+	MyActor()
+	{
+		addComponent(a);
+		addComponent(b);
+	}
+
+private:
+	A* a = new A;
+	B* b = new B;
+};
+
+
+int main()
+{
+	MyActor actor;
+	actor.start();
+}
